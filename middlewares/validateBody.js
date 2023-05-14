@@ -1,26 +1,20 @@
-const Joi = require("joi");
+const {RequestError} = require("../helpers");
 
-const validateBody = (schema) => (req, res, next) => {
-  const { error } = schema.validate(req.body);
-  if (Object.keys(req.body).length === 0) {
-    res.status(400).json({ message: "missing fields" });
-    return;
-  }
-  if (req.method === "POST" && error) {
-    res.status(400).json({ message: `missing required ${error.details[0].context.key} field` });
-    return;
-  }
-  if (req.method === "PUT" && error) {
-    res
-      .status(400)
-      .json({ message: `missing required ${error.details[0].context.key} field` });
-    return;
-  }
-  if (req.method === "PUT" && error) {
-    res.status(400).json({ message: "missing fields" });
-    return;
-  }
-  next();
-};
+const validateBody = (schema) => {
+    const func = (req, res, next) => {
+      if (Object.keys(req.body).length === 0) {
+        next(RequestError(400, "missing required name field"));
+      } else {
+        const { error } = schema.validate(req.body);
+        if (error) {
+          next(RequestError(400, error.message));
+        }
+        next();
+      }
+    };
+  
+    return func;
+  };
+  
+  module.exports = validateBody;
 
-module.exports = validateBody;
