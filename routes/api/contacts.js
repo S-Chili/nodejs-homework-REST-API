@@ -2,7 +2,7 @@ const express = require("express");
 
 const ctrl = require("../../controllers/contacts");
 
-const {validateBody} = require("../../middlewares");
+const {validateBody, authenticate} = require("../../middlewares");
 
 const {validateFavorite} = require("../../middlewares");
 
@@ -12,16 +12,16 @@ const {ctrlWrapper} = require("../../helpers");
 
 const router = express.Router();
 
-router.get("/", ctrlWrapper(ctrl.getAll));
+router.get("/", authenticate, ctrlWrapper(ctrl.getAll));
 
-router.get("/:id", ctrlWrapper(ctrl.getById));
+router.get("/:id", authenticate, ctrlWrapper(ctrl.getById));
 
-router.post("/", validateBody(schemas.addSchema, 'POST'), ctrlWrapper(ctrl.add));
+router.post("/", authenticate, validateBody(schemas.addSchema, 'POST'), ctrlWrapper(ctrl.add));
 
-router.put("/:id", validateBody(schemas.addSchema, 'PUT'), ctrlWrapper(ctrl.updateContacts));
+router.put("/:id", authenticate, validateBody(schemas.addSchema, 'PUT'), ctrlWrapper(ctrl.updateContacts));
 
-router.patch("/:id/favorite", validateFavorite(schemas.updateFavoriteSchema), ctrlWrapper(ctrl.updateFavorite));
+router.patch("/:id/favorite", authenticate, validateFavorite(schemas.updateFavoriteSchema), ctrlWrapper(ctrl.updateFavorite));
 
-router.delete("/:id", ctrlWrapper(ctrl.removeContacts));
+router.delete("/:id", authenticate, ctrlWrapper(ctrl.removeContacts));
 
 module.exports = router;
