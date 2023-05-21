@@ -2,7 +2,7 @@ const {Schema, model} = require("mongoose")
 const Joi = require("joi")
 
 const {handleSaveErrors} = require("../helpers")
-
+const allowedSubscription = ["starter", "pro", "business"]
 const userSchema = new Schema({
     password: {
       type: String,
@@ -15,7 +15,7 @@ const userSchema = new Schema({
     },
     subscription: {
       type: String,
-      enum: ["starter", "pro", "business"],
+      enum: allowedSubscription,
       default: "starter"
     },
     token: { 
@@ -38,9 +38,14 @@ const loginSchema = Joi.object({
     password: Joi.string().min(6).required(),
 })
 
+const subscriptionSchema = Joi.object({
+  subscription: Joi.string().valid(...allowedSubscription).required(),
+})
+
 const schemas = {
     registerSchema,
     loginSchema,
+    subscriptionSchema,
 }
 
 const User = model("user", userSchema)
