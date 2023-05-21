@@ -14,7 +14,6 @@ const register = async(req, res) => {
     };
 
     const hashPassword = await bcrypt.hash(password, 10);
-        //const passwordCompare = await bcrypt.compare(password, result)
 
     const result = await User.create({email, password: hashPassword});
     res.status(201).json({
