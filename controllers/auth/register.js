@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const {User} = require('../../models/user')
 
 const {RequestError} = require('../../helpers');
-//const { subscription } = require('../../routes/api/auth');
 
 const register = async(req, res) => {
     const {email, password} = req.body;
@@ -17,8 +16,10 @@ const register = async(req, res) => {
 
     const result = await User.create({email, password: hashPassword});
     res.status(201).json({
-        email: result.email,
-        subscription: result.subscription
+        user: {
+            email: result.email,
+            subscription: result.subscription,
+        }
     })
 }
 

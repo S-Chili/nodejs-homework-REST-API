@@ -14,11 +14,15 @@ const login = async(req, res) => {
     const {email, password} = req.body;
     const user = await User.findOne({email});
    
+    if (!user) {
+      throw new RequestError(401, 'Email or password is wrong');
+    }
+      
     const passwordCompare = await bcrypt.compare(password, user.password);
-
-    if(!user || !passwordCompare) {
-        throw RequestError(401, 'Email or password is wrong')
-    };
+    
+    if (!passwordCompare) {
+      throw new RequestError(401, 'Email or password is wrong');
+    }
 
     const payload = { 
         id: user._id 
