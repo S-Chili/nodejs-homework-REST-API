@@ -6,7 +6,7 @@ require('dotenv').config()
 
 const {User} = require('../../models/user')
 
-const {RequestError} = require('../../helpers')
+const {RequestError} = require('../../helpers');
 
 const {SECRET_KEY} = process.env
 
@@ -15,13 +15,13 @@ const login = async(req, res) => {
     const user = await User.findOne({email});
    
     if (!user) {
-      throw new RequestError(401, 'Email or password is wrong');
+      throw RequestError(401, 'Email or password is wrong');
     }
-      
+
     const passwordCompare = await bcrypt.compare(password, user.password);
     
     if (!passwordCompare) {
-      throw new RequestError(401, 'Email or password is wrong');
+      throw RequestError(401, 'Email or password is wrong');
     }
 
     const payload = { 
