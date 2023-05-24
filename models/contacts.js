@@ -1,5 +1,6 @@
 const {Schema, model} = require('mongoose')
 const Joi = require('joi')
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const {handleSaveErrors} = require("../helpers")
 
@@ -18,9 +19,15 @@ const contactsSchema = new Schema({
       type: Boolean,
       default: false,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+    },
 }, {versionKey: false, timestamps: true})
 
 contactsSchema.post("save", handleSaveErrors)
+
+contactsSchema.plugin(mongoosePaginate)
 
 const addSchema = Joi.object({
   name: Joi.string().required().messages({
